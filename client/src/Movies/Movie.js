@@ -9,7 +9,7 @@ export default class Movie extends React.Component {
       movie: null
     };
   }
-
+ 
   componentDidMount() {
     this.fetchMovie(this.props.match.params.id);
   }
@@ -31,6 +31,18 @@ export default class Movie extends React.Component {
     const addToSavedList = this.props.addToSavedList;
     addToSavedList(this.state.movie);
   };
+  deleteMovie = (id)=>{
+    axios.delete(`http://localhost:5000/api/movies/${id}`)
+      .then(res=>{
+        console.log(res)
+        this.props.history.push('/')
+        
+      })
+      .catch(er=>{
+       
+        console.log(er)
+      })  
+  }
 
   render() {
     if (!this.state.movie) {
@@ -46,6 +58,7 @@ export default class Movie extends React.Component {
        <Link to={`/update-movie/${this.state.movie.id}`}>
           <button>Update</button>
        </Link> 
+       <button onClick={()=>this.deleteMovie(this.state.movie.id)}>Delete</button>
       </div>
     );
   }
