@@ -75,9 +75,12 @@ body {
   color: red;
   text-align: center;
 }
+.updS{
+  text-align: center;
+}
 form, input, button{
 font-size: 2rem;
-text-align: center;
+
 
 }
 form span{
