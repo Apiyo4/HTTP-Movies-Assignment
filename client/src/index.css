@@ -75,3 +75,11 @@ body {
   color: red;
   text-align: center;
 }
+form, input, button{
+font-size: 2rem;
+text-align: center;
+
+}
+form span{
+  padding-left: 1%;
+}
