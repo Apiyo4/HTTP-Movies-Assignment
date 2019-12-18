@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 
-
+let updatedForm;
 function UpdateMovie(props){
-    console.log(props.match.params.id)
+   
     const passedId = props.match.params.id
     
     const [form, setForm] = useState({
@@ -11,36 +11,64 @@ function UpdateMovie(props){
     title: "",
     director: "",
     metascore: '',
-    stars: [{
-        star1: ""}, 
-        {star2: ""}, 
-        {star3: ""}
-    ]
+    stars: [
+        {
+        star1: "", 
+        star2: "", 
+        star3: ""
+    }]
     })
     const getMovies = ()=>{
         Axios.get(`http://localhost:5000/api/movies/${props.match.params.id}`)
         .then(res=>{
-            debugger
+           
             setForm({
                 
                 title: res.data.title,
                 director: res.data.director,
                 metascore: res.data.metascore,
                 stars: [{
-                    star1: res.data.stars[0]}, 
-                    {star2: res.data.stars[1]}, 
-                    {star3: res.data.stars[2]}
+                    star1: res.data.stars[0], 
+                   star2: res.data.stars[1], 
+                     star3: res.data.stars[2]
+                }
                 ]
                 
             })
         })
         .catch(er=>{
-            debugger
+            
+            alert(er)
         })
     }
     useEffect(()=>{
         getMovies()
-    }, [])
+    }, []);
+    
+    
+    const updateMovie= (e)=>{
+        e.preventDefault();
+        updatedForm = {
+            id: passedId,
+            title: form.title,
+            director: form.director,
+            metascore: form.metascore,
+            stars: [form.stars[0].star1,form.stars[0].star2, form.stars[0].star3]
+        }
+      
+        Axios.put(`http://localhost:5000/api/movies/${props.match.params.id}`, {id: passedId,
+        title: form.title,
+        director: form.director,
+        metascore: form.metascore,
+        stars: [form.stars[0].star1,form.stars[0].star2, form.stars[0].star3] } )
+        .then(res=>{
+            props.history.push('/');
+        })
+        .catch(er=>{
+            alert(er)
+        })
+      
+    }
     const handleChanges = e =>{
         e.preventDefault();
         setForm({
@@ -79,17 +107,17 @@ function UpdateMovie(props){
                 <br />
                 <label> Star2:
                     <span>
-                        <input type='text' name='star2' value={form.stars[1].star2} onChange={handleChanges}/>
+                        <input type='text' name='star2' value={form.stars[0].star2} onChange={handleChanges}/>
                     </span>
                 </label>
                 <br />
                 <label>Star3:
                     <span> 
-                        <input type='text' name='star3' value={form.stars[2].star3} onChange={handleChanges}/>
+                        <input type='text' name='star3' value={form.stars[0].star3} onChange={handleChanges}/>
                     </span>
                 </label>
                 <br />
-                <button>Update Movie</button>
+                <button onClick={updateMovie}>Update Movie</button>
             </form>
         </div>
     )
